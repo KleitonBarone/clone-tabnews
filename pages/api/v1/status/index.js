@@ -9,7 +9,7 @@ async function status(request, response) {
     text: "SELECT COUNT(*)::int FROM pg_stat_activity WHERE datname = $1;",
     values: [databaseName],
   });
-  response.status(200).send({
+  return response.status(200).send({
     updated_at: updatedAt,
     dependencies: {
       database: {
