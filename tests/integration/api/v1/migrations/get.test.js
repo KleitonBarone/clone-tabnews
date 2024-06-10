@@ -1,6 +1,10 @@
 import databaseUtil from "tests/util/database.util";
+import orchestrator from "tests/orchestrator.js";
 
-beforeAll(databaseUtil.cleanDatabase);
+beforeAll(async () => {
+  await orchestrator.waitForAllServices();
+  await databaseUtil.cleanDatabase();
+});
 
 test("GET to /api/v1/migrations should return 200", async () => {
   const response1 = await fetch("http://localhost:3000/api/v1/migrations");
