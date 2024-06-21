@@ -2,7 +2,10 @@ import retry from "async-retry";
 
 function waitForWebServer() {
   async function fetchStatusPage() {
-    await fetch("http://localhost:3000/api/v1/status");
+    const result = await fetch("http://localhost:3000/api/v1/status");
+    if (result.status !== 200) {
+      throw new Error("Web server is not running");
+    }
   }
 
   return retry(fetchStatusPage, {
