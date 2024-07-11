@@ -1,7 +1,9 @@
 const dotenv = require("dotenv");
 
-export default async () => {
+const jestSetup = async () => {
   dotenv.config({
     path: ".env.development",
   });
 };
+
+export default jestSetup;

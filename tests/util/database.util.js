@@ -11,7 +11,9 @@ async function numMigrationsRan() {
   return parseInt(queryResult.rows[0].count, 10);
 }
 
-export default {
+const databaseUtil = {
   cleanDatabase: cleanDatabase,
   numMigrationsRan: numMigrationsRan,
 };
+
+export default databaseUtil;
