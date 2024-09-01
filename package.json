@@ -4,7 +4,7 @@
   "description": "Implementação do https://www.tabnews.com.br para aprendizado",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run services:up && npm run services:wait:database && npm run migrations:up && next dev",
+    "dev": "node infra/scripts/dev-setup.js",
     "test": "npm run services:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand\"",
     "posttest": "npm run services:stop",
     "test:watch": "jest --watchAll --runInBand",
@@ -37,6 +37,7 @@
     "@commitlint/config-conventional": "19.2.2",
     "commitizen": "4.3.0",
     "concurrently": "8.2.2",
+    "cross-spawn": "7.0.3",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.5",
