@@ -1,12 +1,11 @@
-import databaseUtil from "tests/util/database.util";
 import orchestrator from "tests/orchestrator.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
-  await databaseUtil.cleanDatabase();
+  await orchestrator.clearDatabase();
 });
 
-beforeAll(databaseUtil.cleanDatabase);
+beforeAll(orchestrator.clearDatabase);
 
 describe("POST /api/v1/migrations", () => {
   describe("Anonymous user", () => {
@@ -21,7 +20,7 @@ describe("POST /api/v1/migrations", () => {
 
         const response1Body = await response1.json();
 
-        const numMigrationsRan1 = await databaseUtil.numMigrationsRan();
+        const numMigrationsRan1 = await orchestrator.numMigrationsRan();
 
         expect(response1.status).toBe(201);
         expect(Array.isArray(response1Body)).toBe(true);
@@ -40,7 +39,7 @@ describe("POST /api/v1/migrations", () => {
 
         const response2Body = await response2.json();
 
-        const numMigrationsRan2 = await databaseUtil.numMigrationsRan();
+        const numMigrationsRan2 = await orchestrator.numMigrationsRan();
 
         expect(response2.status).toBe(200);
         expect(Array.isArray(response2Body)).toBe(true);

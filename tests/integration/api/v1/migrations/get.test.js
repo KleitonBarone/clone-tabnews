@@ -1,9 +1,8 @@
-import databaseUtil from "tests/util/database.util";
 import orchestrator from "tests/orchestrator.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
-  await databaseUtil.cleanDatabase();
+  await orchestrator.clearDatabase();
 });
 
 describe("GET /api/v1/migrations", () => {
