@@ -59,7 +59,9 @@
   },
   "lint-staged": {
     "*": [
-      "secretlint"
+      "npm run lint:prettier:check",
+      "npm run lint:eslint:check",
+      "npm run lint:secretlint:check"
     ]
   }
 }
