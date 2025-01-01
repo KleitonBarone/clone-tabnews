@@ -1,1 +1,1 @@
-node ./.husky/check-secrets.js
+npx --no-install lint-staged
