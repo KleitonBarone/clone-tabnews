@@ -1,6 +1,7 @@
 import retry from "async-retry";
 
 import database from "infra/database";
+import migrator from "models/migrator";
 
 function waitForWebServer() {
   async function fetchStatusPage() {
@@ -24,6 +25,10 @@ async function clearDatabase() {
   await database.query("drop schema public cascade; create schema public;");
 }
 
+async function runPendingMigrations() {
+  await migrator.runPendingMigrations();
+}
+
 async function numMigrationsRan() {
   const queryResult = await database.query(
     "SELECT COUNT(*) FROM public.pgmigrations;",
@@ -35,5 +40,6 @@ const orchestrator = {
   waitForAllServices: waitForAllServices,
   clearDatabase: clearDatabase,
   numMigrationsRan: numMigrationsRan,
+  runPendingMigrations: runPendingMigrations,
 };
 export default orchestrator;
