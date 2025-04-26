@@ -15,6 +15,16 @@ async function create(userInputValues) {
   return newUser;
 }
 
+async function update(username, userInputValues) {
+  await findOneByUsername(username);
+  if ("email" in userInputValues) {
+    await validateUniqueEmail(userInputValues.email);
+  }
+  if ("username" in userInputValues) {
+    await validateUniqueUsername(userInputValues.username);
+  }
+}
+
 async function validateUniqueEmail(email) {
   const results = await database.query({
     text: `
@@ -31,7 +41,7 @@ async function validateUniqueEmail(email) {
   if (results.rowCount > 0) {
     throw new ValidationError({
       message: "O email informado já está sendo utilizado.",
-      action: "Utilize outro email para realizar o cadastro.",
+      action: "Utilize outro email para realizar esta operação.",
     });
   }
 }
@@ -52,7 +62,7 @@ async function validateUniqueUsername(username) {
   if (results.rowCount > 0) {
     throw new ValidationError({
       message: "O username informado já está sendo utilizado.",
-      action: "Utilize outro username para realizar o cadastro.",
+      action: "Utilize outro username para realizar esta operação.",
     });
   }
 }
@@ -110,6 +120,7 @@ async function runSelectQuery(username) {
 const user = {
   create,
   findOneByUsername,
+  update,
 };
 
 export default user;
