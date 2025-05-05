@@ -15,6 +15,28 @@ async function create(userInputValues) {
   return newUser;
 }
 
+async function update(username, userInputValues) {
+  const currentUser = await findOneByUsername(username);
+  if ("email" in userInputValues) {
+    await validateUniqueEmail(userInputValues.email);
+  }
+  if ("username" in userInputValues) {
+    await validateUniqueUsername(userInputValues.username);
+  }
+  if ("password" in userInputValues) {
+    await hashPasswordInObject(userInputValues);
+  }
+
+  const userWithNewValues = {
+    ...currentUser,
+    ...userInputValues,
+  };
+
+  const updatedUser = await runUpdateQuery(userWithNewValues);
+
+  return updatedUser;
+}
+
 async function validateUniqueEmail(email) {
   const results = await database.query({
     text: `
@@ -31,7 +53,7 @@ async function validateUniqueEmail(email) {
   if (results.rowCount > 0) {
     throw new ValidationError({
       message: "O email informado já está sendo utilizado.",
-      action: "Utilize outro email para realizar o cadastro.",
+      action: "Utilize outro email para realizar esta operação.",
     });
   }
 }
@@ -52,7 +74,7 @@ async function validateUniqueUsername(username) {
   if (results.rowCount > 0) {
     throw new ValidationError({
       message: "O username informado já está sendo utilizado.",
-      action: "Utilize outro username para realizar o cadastro.",
+      action: "Utilize outro username para realizar esta operação.",
     });
   }
 }
@@ -107,9 +129,36 @@ async function runSelectQuery(username) {
   return results.rows[0];
 }
 
+async function runUpdateQuery(userInputValues) {
+  const results = await database.query({
+    text: `
+      UPDATE
+        users
+      SET
+        username = $2,
+        email = $3,
+        password = $4,
+        updated_at = timezone('utc', now())
+      WHERE
+        id = $1
+      RETURNING
+        *
+    ;`,
+    values: [
+      userInputValues.id,
+      userInputValues.username,
+      userInputValues.email,
+      userInputValues.password,
+    ],
+  });
+
+  return results.rows[0];
+}
+
 const user = {
   create,
   findOneByUsername,
+  update,
 };
 
 export default user;
