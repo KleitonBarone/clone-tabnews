@@ -16,13 +16,25 @@ async function create(userInputValues) {
 }
 
 async function update(username, userInputValues) {
-  await findOneByUsername(username);
+  const currentUser = await findOneByUsername(username);
   if ("email" in userInputValues) {
     await validateUniqueEmail(userInputValues.email);
   }
   if ("username" in userInputValues) {
     await validateUniqueUsername(userInputValues.username);
   }
+  if ("password" in userInputValues) {
+    await hashPasswordInObject(userInputValues);
+  }
+
+  const userWithNewValues = {
+    ...currentUser,
+    ...userInputValues,
+  };
+
+  const updatedUser = await runUpdateQuery(userWithNewValues);
+
+  return updatedUser;
 }
 
 async function validateUniqueEmail(email) {
@@ -113,6 +125,32 @@ async function runSelectQuery(username) {
       action: "Verifique se o username está digitado corretamente.",
     });
   }
+
+  return results.rows[0];
+}
+
+async function runUpdateQuery(userInputValues) {
+  const results = await database.query({
+    text: `
+      UPDATE
+        users
+      SET
+        username = $2,
+        email = $3,
+        password = $4,
+        updated_at = timezone('utc', now())
+      WHERE
+        id = $1
+      RETURNING
+        *
+    ;`,
+    values: [
+      userInputValues.id,
+      userInputValues.username,
+      userInputValues.email,
+      userInputValues.password,
+    ],
+  });
 
   return results.rows[0];
 }
