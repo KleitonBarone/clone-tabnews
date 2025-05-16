@@ -1,7 +1,9 @@
 import retry from "async-retry";
+import { faker } from "@faker-js/faker";
 
 import database from "infra/database";
 import migrator from "models/migrator";
+import user from "models/user";
 
 function waitForWebServer() {
   async function fetchStatusPage() {
@@ -29,6 +31,15 @@ async function runPendingMigrations() {
   await migrator.runPendingMigrations();
 }
 
+async function createUser(userObject) {
+  return await user.create({
+    username:
+      userObject.username || faker.internet.username().replace(/[_.-]/g, ""),
+    email: userObject.email || faker.internet.email(),
+    password: userObject.password || "senha123",
+  });
+}
+
 async function numMigrationsRan() {
   const queryResult = await database.query(
     "SELECT COUNT(*) FROM public.pgmigrations;",
@@ -41,5 +52,6 @@ const orchestrator = {
   clearDatabase: clearDatabase,
   numMigrationsRan: numMigrationsRan,
   runPendingMigrations: runPendingMigrations,
+  createUser: createUser,
 };
 export default orchestrator;
