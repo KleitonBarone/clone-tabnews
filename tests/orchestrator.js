@@ -4,6 +4,7 @@ import { faker } from "@faker-js/faker";
 import database from "infra/database";
 import migrator from "models/migrator";
 import user from "models/user";
+import session from "models/session";
 
 function waitForWebServer() {
   async function fetchStatusPage() {
@@ -47,11 +48,16 @@ async function numMigrationsRan() {
   return parseInt(queryResult.rows[0].count, 10);
 }
 
+async function createSession(userId) {
+  return await session.create(userId);
+}
+
 const orchestrator = {
   waitForAllServices: waitForAllServices,
   clearDatabase: clearDatabase,
   numMigrationsRan: numMigrationsRan,
   runPendingMigrations: runPendingMigrations,
   createUser: createUser,
+  createSession: createSession,
 };
 export default orchestrator;
