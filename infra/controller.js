@@ -15,6 +15,10 @@ function onNoMatchHandler(request, response) {
 }
 
 function onErrorHandler(error, request, response) {
+  if (error instanceof UnauthorizedError) {
+    clearSessionCookie(response);
+  }
+
   if (
     error instanceof ValidationError ||
     error instanceof NotFoundError ||
