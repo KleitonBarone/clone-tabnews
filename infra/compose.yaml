@@ -7,6 +7,13 @@ services:
     ports:
       - "5432:5432"
 
+  mailcatcher:
+    container_name: clone-tabnews-mailcatcher-dev
+    image: "sj26/mailcatcher"
+    ports:
+      - "1025:1025"
+      - "1080:1080"
+
 networks:
   default:
     name: clone-tabnews-network-dev
