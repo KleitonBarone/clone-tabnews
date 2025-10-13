@@ -1,6 +1,7 @@
+import activation from "models/activation";
 import controller from "infra/controller";
-import user from "models/user";
 import { createRouter } from "next-connect";
+import user from "models/user";
 
 const router = createRouter();
 
@@ -11,5 +12,6 @@ export default router.handler(controller.errorHandlers);
 async function postHandler(request, response) {
   const userInputValues = request.body;
   const newUser = await user.create(userInputValues);
+  await activation.sendEmailtoUser(newUser);
   return response.status(201).json(newUser);
 }
