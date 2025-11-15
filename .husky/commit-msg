@@ -1,1 +1,1 @@
-npm run commitlint:check
+npm run commitlint -- --edit $1

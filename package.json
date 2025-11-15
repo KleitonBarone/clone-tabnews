@@ -19,8 +19,7 @@
     "lint:hook": "biome check",
     "secret:check": "secretlint '**/*'",
     "commitlint": "commitlint",
-    "commitlint:check": "commitlint --from=HEAD~1",
-    "githook": "lint-staged --verbose",
+    "githook": "lint-staged",
     "prepare": "husky",
     "commit": "cz"
   },
