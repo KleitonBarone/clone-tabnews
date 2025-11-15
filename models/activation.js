@@ -1,5 +1,6 @@
 import database from "infra/database";
 import email from "infra/email";
+import { NotFoundError } from "infra/errors";
 import webserver from "infra/webserver";
 
 const EXPIRATION_IN_MILLISECONDS = 15 * 60 * 1000; // 15 minutes
@@ -11,7 +12,7 @@ async function create(userId) {
   return newToken;
 }
 
-async function findOneByUserId(userId) {
+async function findOneValidById(userId) {
   const tokenFound = await runSelectQuery(userId);
   return tokenFound;
 }
@@ -24,13 +25,20 @@ async function runSelectQuery(userId) {
       FROM 
         user_activation_tokens
       WHERE 
-        user_id = $1
-      ORDER BY 
-        created_at DESC
+        id = $1
+        AND expires_at > NOW()
+        AND used_at IS NULL
       LIMIT 1
       ;`,
     values: [userId],
   });
+
+  if (results.rowCount === 0) {
+    throw new NotFoundError({
+      message: "Token de ativação não foi encontrado no sistema ou expirou.",
+      action: "Faça um novo cadastro.",
+    });
+  }
 
   return results.rows[0];
 }
@@ -68,7 +76,7 @@ Equipe TabNews`,
 const activation = {
   sendEmailtoUser,
   create,
-  findOneByUserId,
+  findOneValidById,
 };
 
 export default activation;
