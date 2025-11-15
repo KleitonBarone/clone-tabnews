@@ -1,7 +1,7 @@
-import { version as uuidVersion } from "uuid";
-import orchestrator from "tests/orchestrator.js";
-import user from "models/user";
 import password from "models/password";
+import user from "models/user";
+import orchestrator from "tests/orchestrator.js";
+import { version as uuidVersion } from "uuid";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();

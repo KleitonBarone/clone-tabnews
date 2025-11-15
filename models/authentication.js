@@ -1,6 +1,6 @@
 import { NotFoundError, UnauthorizedError } from "infra/errors";
-import user from "./user";
 import password from "./password";
+import user from "./user";
 
 async function getAuthenticatedUser(providedEmail, providedPassword) {
   try {
