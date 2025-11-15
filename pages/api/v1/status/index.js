@@ -1,6 +1,6 @@
-import { createRouter } from "next-connect";
-import database from "infra/database";
 import controller from "infra/controller";
+import database from "infra/database";
+import { createRouter } from "next-connect";
 
 const router = createRouter();
 
@@ -8,7 +8,7 @@ router.get(getHandler);
 
 export default router.handler(controller.errorHandlers);
 
-async function getHandler(request, response) {
+async function getHandler(_request, response) {
   const updatedAt = new Date().toISOString();
   const postgresVersion = await database.query("SHOW server_version;");
   const maxDatabaseConnections = await database.query("SHOW max_connections;");

@@ -1,5 +1,5 @@
 import * as cookie from "cookie";
-
+import session from "models/session";
 import {
   InternalServerError,
   MethodNotAllowedError,
@@ -7,14 +7,13 @@ import {
   UnauthorizedError,
   ValidationError,
 } from "./errors";
-import session from "models/session";
 
-function onNoMatchHandler(request, response) {
+function onNoMatchHandler(_request, response) {
   const publicErrorObject = new MethodNotAllowedError();
   return response.status(publicErrorObject.statusCode).json(publicErrorObject);
 }
 
-function onErrorHandler(error, request, response) {
+function onErrorHandler(error, _request, response) {
   if (error instanceof UnauthorizedError) {
     clearSessionCookie(response);
   }

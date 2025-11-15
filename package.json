@@ -14,10 +14,12 @@
     "services:wait:database": "node infra/scripts/wait-for-postgres.js",
     "migrations:create": "node-pg-migrate --migrations-dir infra/migrations create",
     "migrations:up": "node-pg-migrate --migrations-dir infra/migrations --envPath .env.development up",
-    "lint:prettier:check": "prettier --check .",
-    "lint:prettier:fix": "prettier --write .",
-    "lint:eslint:check": "next lint --dir .",
-    "lint:secretlint:check": "npx secretlint '**/*'",
+    "lint:check": "biome check .",
+    "lint:fix": "biome check --write .",
+    "lint:hook": "biome check",
+    "secret:check": "secretlint '**/*'",
+    "commitlint": "commitlint",
+    "githook": "lint-staged",
     "prepare": "husky",
     "commit": "cz"
   },
@@ -48,14 +50,10 @@
     "concurrently": "8.2.2",
     "cross-spawn": "7.0.3",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "8.57.0",
-    "eslint-config-next": "14.2.5",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-jest": "28.8.0",
+    "@biomejs/biome": "2.3.5",
     "husky": "9.1.4",
     "jest": "29.7.0",
     "lint-staged": "15.3.0",
-    "prettier": "3.3.3",
     "secretlint": "9.0.0",
     "set-cookie-parser": "2.7.1"
   },
@@ -66,9 +64,8 @@
   },
   "lint-staged": {
     "*": [
-      "npm run lint:prettier:check",
-      "npm run lint:eslint:check",
-      "npm run lint:secretlint:check"
+      "npm run lint:hook",
+      "npm run secret:check"
     ]
   }
 }
