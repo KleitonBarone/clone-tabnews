@@ -17,6 +17,8 @@
     "lint:check": "biome check .",
     "lint:fix": "biome check --write .",
     "secret:check": "secretlint '**/*'",
+    "commitlint:check": "commitlint --from=HEAD~1",
+    "githook": "lint-staged",
     "prepare": "husky",
     "commit": "cz"
   },
