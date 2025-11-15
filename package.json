@@ -16,9 +16,11 @@
     "migrations:up": "node-pg-migrate --migrations-dir infra/migrations --envPath .env.development up",
     "lint:check": "biome check .",
     "lint:fix": "biome check --write .",
+    "lint:hook": "biome check",
     "secret:check": "secretlint '**/*'",
+    "commitlint": "commitlint",
     "commitlint:check": "commitlint --from=HEAD~1",
-    "githook": "lint-staged",
+    "githook": "lint-staged --verbose",
     "prepare": "husky",
     "commit": "cz"
   },
@@ -63,7 +65,7 @@
   },
   "lint-staged": {
     "*": [
-      "npm run lint:check",
+      "npm run lint:hook",
       "npm run secret:check"
     ]
   }
