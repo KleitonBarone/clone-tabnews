@@ -30,6 +30,8 @@ function onErrorHandler(error, _request, response) {
     return response.status(error.statusCode).json(error);
   }
 
+  console.log("Unexpected error:", error);
+
   const publicErrorObject = new InternalServerError({
     cause: error,
   });

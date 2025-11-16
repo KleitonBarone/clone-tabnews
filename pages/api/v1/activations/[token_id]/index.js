@@ -4,7 +4,8 @@ import { createRouter } from "next-connect";
 
 const router = createRouter();
 
-router.patch(patchHandler);
+router.use(controller.injectAnonymousOrUser);
+router.patch(controller.canRequest("read:activation_token"), patchHandler);
 
 export default router.handler(controller.errorHandlers);
 
@@ -13,9 +14,9 @@ async function patchHandler(request, response) {
 
   const tokenInfo = await activation.findOneValidById(tokenId);
 
-  const updatedToken = await activation.markTokenAsUsed(tokenInfo);
-
   await activation.activateUserById(tokenInfo.user_id);
+
+  const updatedToken = await activation.markTokenAsUsed(tokenInfo);
 
   return response.status(200).json(updatedToken);
 }
