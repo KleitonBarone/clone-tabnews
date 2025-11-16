@@ -39,7 +39,7 @@ async function runSelectQuery(sessionToken) {
       sessions
     WHERE
       token = $1
-      AND expires_at > NOW()
+      AND expires_at > timezone('utc', now())
     LIMIT 1
     ;`,
     values: [sessionToken],
@@ -67,7 +67,7 @@ async function runUpdateQuery(sessionId, expiresAt) {
       sessions
     SET
       expires_at = $1,
-      updated_at = NOW()
+      updated_at = timezone('utc', now())
     WHERE
       id = $2
     RETURNING
@@ -90,7 +90,7 @@ async function runExpireQuery(sessionId) {
       sessions
     SET
       expires_at = expires_at - interval '1 year',
-      updated_at = NOW()
+      updated_at = timezone('utc', now())
     WHERE
       id = $1
     RETURNING

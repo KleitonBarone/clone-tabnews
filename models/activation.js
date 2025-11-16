@@ -17,6 +17,15 @@ async function findOneValidById(userId) {
   return tokenFound;
 }
 
+async function markTokenAsUsed(tokenInfo) {
+  return await runUpdateQuery(tokenInfo.id);
+}
+
+async function activateUserById(userId) {
+  const features = ["create:session"];
+  return await runUpdateUserQuery(userId, features);
+}
+
 async function runSelectQuery(userId) {
   const results = await database.query({
     text: `
@@ -26,11 +35,63 @@ async function runSelectQuery(userId) {
         user_activation_tokens
       WHERE 
         id = $1
-        AND expires_at > NOW()
+        AND expires_at > timezone('utc', now())
         AND used_at IS NULL
       LIMIT 1
       ;`,
     values: [userId],
+  });
+
+  if (results.rowCount === 0) {
+    throw new NotFoundError({
+      message: "Token de ativação não foi encontrado no sistema ou expirou.",
+      action: "Faça um novo cadastro.",
+    });
+  }
+
+  return results.rows[0];
+}
+
+async function runUpdateQuery(tokenId) {
+  const results = await database.query({
+    text: `
+      UPDATE 
+        user_activation_tokens
+      SET 
+        used_at = timezone('utc', now()),
+        updated_at = timezone('utc', now())
+      WHERE 
+        id = $1
+      RETURNING 
+        *
+      ;`,
+    values: [tokenId],
+  });
+
+  if (results.rowCount === 0) {
+    throw new NotFoundError({
+      message: "Token de ativação não foi encontrado no sistema ou expirou.",
+      action: "Faça um novo cadastro.",
+    });
+  }
+
+  return results.rows[0];
+}
+
+async function runUpdateUserQuery(userId, features) {
+  const results = await database.query({
+    text: `
+      UPDATE 
+        users
+      SET 
+        features = $2,
+        updated_at = timezone('utc', now())
+      WHERE 
+        id = $1
+      RETURNING 
+        *
+      ;`,
+    values: [userId, features],
   });
 
   if (results.rowCount === 0) {
@@ -77,6 +138,8 @@ const activation = {
   sendEmailtoUser,
   create,
   findOneValidById,
+  markTokenAsUsed,
+  activateUserById,
 };
 
 export default activation;
