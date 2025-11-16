@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import retry from "async-retry";
 
 import database from "infra/database";
+import activation from "models/activation";
 import migrator from "models/migrator";
 import session from "models/session";
 import user from "models/user";
@@ -58,6 +59,16 @@ async function createUser(userObject = {}) {
   });
 }
 
+async function activateUserById(userId) {
+  return await activation.activateUserById(userId);
+}
+
+async function createUserAndActivate(userObject = {}) {
+  const newUser = await createUser(userObject);
+  const activatedUser = await activateUserById(newUser.id);
+  return activatedUser;
+}
+
 async function numMigrationsRan() {
   const queryResult = await database.query(
     "SELECT COUNT(*) FROM public.pgmigrations;",
@@ -107,6 +118,8 @@ const orchestrator = {
   numMigrationsRan: numMigrationsRan,
   runPendingMigrations: runPendingMigrations,
   createUser: createUser,
+  activateUserById: activateUserById,
+  createUserAndActivate: createUserAndActivate,
   createSession: createSession,
   extractUUID: extractUUID,
 };

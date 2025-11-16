@@ -13,6 +13,7 @@ beforeAll(async () => {
 describe("Use case: Registration flow (all successful)", () => {
   let createUserResponseBody = {};
   let activationToken = null;
+  let loginResponseBody = {};
   test("Create user account", async () => {
     const createUserResponse = await fetch(
       "http://localhost:3000/api/v1/users",
@@ -83,10 +84,47 @@ describe("Use case: Registration flow (all successful)", () => {
 
     const activatedUser = await user.findOneByUsername("RegistrationFlow");
 
-    expect(activatedUser.features).toEqual(["create:session"]);
+    expect(activatedUser.features).toEqual(["create:session", "read:session"]);
   });
 
-  test("Login", async () => {});
+  test("Login", async () => {
+    const loginResponse = await fetch("http://localhost:3000/api/v1/sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "RegistrationFlow@example.com",
+        password: "senha123",
+      }),
+    });
 
-  test("Get user information", async () => {});
+    expect(loginResponse.status).toBe(201);
+
+    loginResponseBody = await loginResponse.json();
+
+    expect(loginResponseBody).toEqual({
+      id: loginResponseBody.id,
+      user_id: createUserResponseBody.id,
+      token: loginResponseBody.token,
+      created_at: loginResponseBody.created_at,
+      updated_at: loginResponseBody.updated_at,
+      expires_at: loginResponseBody.expires_at,
+    });
+  });
+
+  test("Get user information", async () => {
+    const userResponse = await fetch("http://localhost:3000/api/v1/user", {
+      method: "GET",
+      headers: {
+        Cookie: `session_id=${loginResponseBody.token}`,
+      },
+    });
+
+    expect(userResponse.status).toBe(200);
+
+    const userResponseBody = await userResponse.json();
+
+    expect(userResponseBody.id).toEqual(createUserResponseBody.id);
+  });
 });

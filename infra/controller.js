@@ -1,4 +1,5 @@
 import * as cookie from "cookie";
+import authorization from "models/authorization";
 import session from "models/session";
 import user from "models/user";
 import {
@@ -94,11 +95,8 @@ function injectAnonymousUser(request) {
 function canRequest(requiredFeature) {
   function canRequestMiddleware(request, _response, next) {
     const userTryingToRequest = request.context.user;
-    const userFeatures = userTryingToRequest.features || [];
 
-    const hasRequiredFeature = userFeatures.includes(requiredFeature);
-
-    if (!hasRequiredFeature) {
+    if (!authorization.can(userTryingToRequest, requiredFeature)) {
       throw new ForbiddenError({
         message: "Você não possui permissão para realizar esta ação.",
         action: `Verifique se o seu usuário possui a feature "${requiredFeature}"`,

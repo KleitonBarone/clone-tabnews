@@ -22,7 +22,7 @@ async function markTokenAsUsed(tokenInfo) {
 }
 
 async function activateUserById(userId) {
-  const features = ["create:session"];
+  const features = ["create:session", "read:session"];
   return await runUpdateUserQuery(userId, features);
 }
 
