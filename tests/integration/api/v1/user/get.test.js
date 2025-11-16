@@ -11,9 +11,28 @@ beforeAll(async () => {
 });
 
 describe("GET /api/v1/user", () => {
+  describe("Anonymous user", () => {
+    test("Without session", async () => {
+      const response = await fetch("http://localhost:3000/api/v1/user", {
+        method: "GET",
+      });
+
+      expect(response.status).toBe(403);
+
+      const responseBody = await response.json();
+
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        message: "Você não possui permissão para realizar esta ação.",
+        action: 'Verifique se o seu usuário possui a feature "read:session"',
+        status_code: 403,
+      });
+    });
+  });
+
   describe("Default user", () => {
     test("With valid session", async () => {
-      const createUser = await orchestrator.createUser({
+      const createUser = await orchestrator.createUserAndActivate({
         username: "UserWithValidSession",
       });
 
@@ -39,6 +58,7 @@ describe("GET /api/v1/user", () => {
         id: createUser.id,
         username: "UserWithValidSession",
         email: createUser.email,
+        features: ["create:session", "read:session"],
         password: createUser.password,
         created_at: createUser.created_at.toISOString(),
         updated_at: createUser.updated_at.toISOString(),
@@ -80,7 +100,7 @@ describe("GET /api/v1/user", () => {
         now: new Date(Date.now() - session.EXPIRATION_IN_MILLISECONDS / 2),
       });
 
-      const createdUser = await orchestrator.createUser({
+      const createdUser = await orchestrator.createUserAndActivate({
         username: "UserWithHalfwayExpiredSession",
       });
 
@@ -102,6 +122,7 @@ describe("GET /api/v1/user", () => {
         id: createdUser.id,
         username: "UserWithHalfwayExpiredSession",
         email: createdUser.email,
+        features: ["create:session", "read:session"],
         password: createdUser.password,
         created_at: createdUser.created_at.toISOString(),
         updated_at: createdUser.updated_at.toISOString(),

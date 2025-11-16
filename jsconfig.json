@@ -1,12 +1,22 @@
 {
   "compilerOptions": {
-    "module": "ES6",
-    "moduleResolution": "Node",
-    "target": "ES6",
-    "jsx": "react",
+    "target": "es2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
     "baseUrl": "."
   },
-  "exclude": ["node_modules", "**/node_modules/*"]
+  "include": ["**/*.js", "**/*.jsx"],
+  "exclude": ["node_modules"]
 }
