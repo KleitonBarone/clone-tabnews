@@ -32,7 +32,9 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
 
     test("With expired token", async () => {
       jest.useFakeTimers({
-        now: new Date(Date.now() - activation.EXPIRATION_IN_MILLISECONDS),
+        now: new Date(
+          Date.now() - activation.EXPIRATION_IN_MILLISECONDS - 60000, // 1 minute buffer
+        ),
       });
 
       const createdUser = await orchestrator.createUser();
