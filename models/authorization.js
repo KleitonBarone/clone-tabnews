@@ -10,7 +10,10 @@ function can(userTryingToRequest, requiredFeature, resourceTarget) {
   if (requiredFeature === "update:user" && resourceTarget) {
     authorized = false;
 
-    if (userTryingToRequest.id === resourceTarget.id) {
+    if (
+      userTryingToRequest.id === resourceTarget.id ||
+      can(userTryingToRequest, "update:user:others")
+    ) {
       authorized = true;
     }
   }

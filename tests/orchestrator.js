@@ -69,6 +69,10 @@ async function createUserAndActivate(userObject = {}) {
   return activatedUser;
 }
 
+async function addFeaturesToUser(userObject, features) {
+  return await user.addFeatures(userObject.id, features);
+}
+
 async function numMigrationsRan() {
   const queryResult = await database.query(
     "SELECT COUNT(*) FROM public.pgmigrations;",
@@ -120,6 +124,7 @@ const orchestrator = {
   createUser: createUser,
   activateUserById: activateUserById,
   createUserAndActivate: createUserAndActivate,
+  addFeaturesToUser: addFeaturesToUser,
   createSession: createSession,
   extractUUID: extractUUID,
 };
