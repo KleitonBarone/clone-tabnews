@@ -1,4 +1,33 @@
+import { InternalServerError } from "infra/errors";
+
+const availableFeatures = [
+  // USER
+  "create:user",
+  "update:user",
+  "update:user:others",
+  "read:user",
+  "read:user:self",
+
+  // SESSION
+  "create:session",
+  "read:session",
+
+  // ACTIVATION_TOKEN
+  "read:activation_token",
+
+  // MIGRATION
+  "read:migration",
+  "create:migration",
+
+  // STATUS
+  "read:status",
+  "read:status:all",
+];
+
 function can(userTryingToRequest, requiredFeature, resourceTarget) {
+  validateUser(userTryingToRequest);
+  validateFeature(requiredFeature);
+
   let authorized = false;
 
   const userFeatures = userTryingToRequest.features;
@@ -22,6 +51,10 @@ function can(userTryingToRequest, requiredFeature, resourceTarget) {
 }
 
 function filterOutput(userRequesting, requiredFeature, resourceTarget) {
+  validateUser(userRequesting);
+  validateFeature(requiredFeature);
+  validateResource(resourceTarget);
+
   if (requiredFeature === "read:user") {
     return {
       id: resourceTarget.id,
@@ -95,6 +128,32 @@ function filterOutput(userRequesting, requiredFeature, resourceTarget) {
     }
 
     return output;
+  }
+}
+
+function validateUser(user) {
+  if (!user || !user.features) {
+    throw new InternalServerError({
+      cause: "É necessário fornecer um `user` no model `authorization`.",
+    });
+  }
+}
+
+function validateFeature(feature) {
+  if (!feature || !availableFeatures.includes(feature)) {
+    throw new InternalServerError({
+      cause:
+        "É necessário fornecer uma `feature` conhecida no model `authorization`",
+    });
+  }
+}
+
+function validateResource(resource) {
+  if (!resource) {
+    throw new InternalServerError({
+      cause:
+        "É necessário fornecer um `resource` em `authorization.filterOutput()`.",
+    });
   }
 }
 
