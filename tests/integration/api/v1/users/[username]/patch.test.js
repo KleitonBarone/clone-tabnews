@@ -207,9 +207,12 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: "uniqueUser3",
-        email: createdUser1.email,
-        features: ["create:session", "read:session", "update:user"],
-        password: responseBody.password,
+        features: [
+          "create:session",
+          "read:session",
+          "update:user",
+          "read:status",
+        ],
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -249,9 +252,12 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: createdUser1.username,
-        email: "uniqueEmail2@example.com",
-        features: ["create:session", "read:session", "update:user"],
-        password: responseBody.password,
+        features: [
+          "create:session",
+          "read:session",
+          "update:user",
+          "read:status",
+        ],
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -291,9 +297,12 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: createdUser1.username,
-        email: createdUser1.email,
-        features: ["create:session", "read:session", "update:user"],
-        password: responseBody.password,
+        features: [
+          "create:session",
+          "read:session",
+          "update:user",
+          "read:status",
+        ],
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -353,9 +362,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: defaultUser.id,
         username: "defaultUserChangedByPrivileged",
-        email: defaultUser.email,
         features: defaultUser.features,
-        password: responseBody.password,
         created_at: defaultUser.created_at.toISOString(),
         updated_at: responseBody.updated_at,
       });

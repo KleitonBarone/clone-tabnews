@@ -33,7 +33,12 @@ async function activateUserById(userId) {
     });
   }
 
-  const features = ["create:session", "read:session", "update:user"];
+  const features = [
+    "create:session",
+    "read:session",
+    "update:user",
+    "read:status",
+  ];
   return await runUpdateUserQuery(userId, features);
 }
 
