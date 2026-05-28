@@ -6,8 +6,10 @@ function checkPostgresStatus(currentRetry = 1) {
     (_, stdout) => {
       const isPostgresDown = !stdout.includes("accepting connections");
 
-      process.stdout.clearLine();
-      process.stdout.cursorTo(0);
+      if (process.stdout.isTTY) {
+        process.stdout.clearLine();
+        process.stdout.cursorTo(0);
+      }
 
       if (isPostgresDown) {
         process.stdout.write(
