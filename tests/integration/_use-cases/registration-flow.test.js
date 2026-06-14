@@ -57,7 +57,7 @@ describe("Use case: Registration flow (all successful)", () => {
     expect(lastEmail.text).toContain(
       `${webserver.origin}/cadastro/ativar/${activationToken.id}`,
     );
-    expect(lastEmail.sender).toBe("<contato@exemplo.com>");
+    expect(lastEmail.sender).toBe("<contato@alerts.tabnews.kleitonbarone.com>");
     expect(lastEmail.recipients).toEqual(["<RegistrationFlow@example.com>"]);
     expect(lastEmail.subject).toBe("Ative seu cadastro no TabNews!");
     expect(lastEmail.text).toContain("RegistrationFlow");
