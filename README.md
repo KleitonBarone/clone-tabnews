@@ -42,7 +42,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 Make sure you have the following installed on your system:
 
-- [Node.js](https://nodejs.org/) (Version 18 or higher)
+- [Node.js](https://nodejs.org/) (Version 24)
 - [npm](https://www.npmjs.com/)
 - [Docker](https://www.docker.com/)
 
