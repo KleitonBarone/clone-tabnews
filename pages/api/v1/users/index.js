@@ -1,15 +1,28 @@
 import controller from "infra/controller";
+import activation from "models/activation";
+import authorization from "models/authorization";
 import user from "models/user";
 import { createRouter } from "next-connect";
 
 const router = createRouter();
 
-router.post(postHandler);
+router.use(controller.injectAnonymousOrUser);
+router.post(controller.canRequest("create:user"), postHandler);
 
 export default router.handler(controller.errorHandlers);
 
 async function postHandler(request, response) {
+  const userRequesting = request.context.user;
   const userInputValues = request.body;
   const newUser = await user.create(userInputValues);
-  return response.status(201).json(newUser);
+  const activationToken = await activation.create(newUser.id);
+  await activation.sendEmailtoUser(newUser, activationToken);
+
+  const secureOutputValues = authorization.filterOutput(
+    userRequesting,
+    "read:user",
+    newUser,
+  );
+
+  return response.status(201).json(secureOutputValues);
 }
