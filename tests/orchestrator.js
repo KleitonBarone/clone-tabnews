@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import retry from "async-retry";
 
 import database from "infra/database";
+import webserver from "infra/webserver";
 import activation from "models/activation";
 import migrator from "models/migrator";
 import session from "models/session";
@@ -11,7 +12,7 @@ const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_
 
 function waitForWebServer() {
   async function fetchStatusPage() {
-    const result = await fetch("http://localhost:3000/api/v1/status");
+    const result = await fetch(`${webserver.origin}/api/v1/status`);
     if (result.status !== 200) {
       throw new Error("Web server is not running");
     }

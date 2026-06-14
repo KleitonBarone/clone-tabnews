@@ -1,3 +1,4 @@
+import webserver from "infra/webserver";
 import orchestrator from "tests/orchestrator.js";
 
 beforeAll(async () => {
@@ -9,7 +10,7 @@ beforeAll(async () => {
 describe("GET /api/v1/migrations", () => {
   describe("Anonymous user", () => {
     test("Retrieving pending migrations", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/migrations");
+      const response = await fetch(`${webserver.origin}/api/v1/migrations`);
 
       expect(response.status).toBe(403);
 
@@ -31,7 +32,7 @@ describe("GET /api/v1/migrations", () => {
         defaultUser.id,
       );
 
-      const response = await fetch("http://localhost:3000/api/v1/migrations", {
+      const response = await fetch(`${webserver.origin}/api/v1/migrations`, {
         headers: {
           Cookie: `session_id=${defaultUserSession.token}`,
         },
@@ -58,7 +59,7 @@ describe("GET /api/v1/migrations", () => {
         privilegedUser.id,
       );
 
-      const response1 = await fetch("http://localhost:3000/api/v1/migrations", {
+      const response1 = await fetch(`${webserver.origin}/api/v1/migrations`, {
         headers: {
           Cookie: `session_id=${privilegedUserSession.token}`,
         },
@@ -69,7 +70,7 @@ describe("GET /api/v1/migrations", () => {
       expect(response1.status).toBe(200);
       expect(Array.isArray(response1Body)).toBe(true);
 
-      const response2 = await fetch("http://localhost:3000/api/v1/migrations", {
+      const response2 = await fetch(`${webserver.origin}/api/v1/migrations`, {
         headers: {
           Cookie: `session_id=${privilegedUserSession.token}`,
         },
