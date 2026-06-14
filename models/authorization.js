@@ -132,7 +132,7 @@ function filterOutput(userRequesting, requiredFeature, resourceTarget) {
 }
 
 function validateUser(user) {
-  if (!user || !user.features) {
+  if (!user?.features) {
     throw new InternalServerError({
       cause: "É necessário fornecer um `user` no model `authorization`.",
     });
