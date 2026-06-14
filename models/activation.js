@@ -138,7 +138,7 @@ async function runInsertQuery(userId, expiresAt) {
 
 async function sendEmailtoUser(user, activationToken) {
   await email.send({
-    from: "TabNews <contato@exemplo.com>",
+    from: "TabNews <contato@alerts.tabnews.kleitonbarone.com>",
     to: user.email,
     subject: "Ative seu cadastro no TabNews!",
     text: `${user.username}, clique no link abaixo para ativar seu cadastro no TabNews:
