@@ -3,12 +3,10 @@ import database from "infra/database";
 import authorization from "models/authorization";
 import { createRouter } from "next-connect";
 
-const router = createRouter();
-
-router.use(controller.injectAnonymousOrUser);
-router.get(controller.canRequest("read:status"), getHandler);
-
-export default router.handler(controller.errorHandlers);
+export default createRouter()
+  .use(controller.injectAnonymousOrUser)
+  .get(controller.canRequest("read:status"), getHandler)
+  .handler(controller.errorHandlers);
 
 async function getHandler(request, response) {
   const userRequesting = request.context.user;
