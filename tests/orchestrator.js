@@ -81,8 +81,8 @@ async function numMigrationsRan() {
   return parseInt(queryResult.rows[0].count, 10);
 }
 
-async function createSession(userId) {
-  return await session.create(userId);
+async function createSession(userObject) {
+  return await session.create(userObject.id);
 }
 
 async function deleteAllEmails() {

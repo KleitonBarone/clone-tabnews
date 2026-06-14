@@ -31,9 +31,7 @@ describe("POST /api/v1/migrations", () => {
   describe("Default user", () => {
     test("Running pending migrations", async () => {
       const defaultUser = await orchestrator.createUserAndActivate();
-      const defaultUserSession = await orchestrator.createSession(
-        defaultUser.id,
-      );
+      const defaultUserSession = await orchestrator.createSession(defaultUser);
 
       const response = await fetch(`${webserver.origin}/api/v1/migrations`, {
         method: "POST",
@@ -62,9 +60,8 @@ describe("POST /api/v1/migrations", () => {
       await orchestrator.addFeaturesToUser(privilegedUser, [
         "create:migration",
       ]);
-      const privilegedUserSession = await orchestrator.createSession(
-        privilegedUser.id,
-      );
+      const privilegedUserSession =
+        await orchestrator.createSession(privilegedUser);
 
       const response = await fetch(`${webserver.origin}/api/v1/migrations`, {
         method: "POST",

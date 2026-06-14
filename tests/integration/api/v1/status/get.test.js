@@ -29,7 +29,7 @@ describe("GET /api/v1/status", () => {
     test("Retrieving current system status", async () => {
       const adminUser = await orchestrator.createUserAndActivate();
       await orchestrator.addFeaturesToUser(adminUser, ["read:status:all"]);
-      const adminUserSession = await orchestrator.createSession(adminUser.id);
+      const adminUserSession = await orchestrator.createSession(adminUser);
 
       const response = await fetch(`${webserver.origin}/api/v1/status`, {
         headers: {

@@ -159,7 +159,7 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
   describe("Default user", () => {
     test("With already used token", async () => {
       const user1 = await orchestrator.createUserAndActivate();
-      const user1Session = await orchestrator.createSession(user1.id);
+      const user1Session = await orchestrator.createSession(user1);
 
       const user2 = await orchestrator.createUser();
       const user2ActivationToken = await activation.create(user2.id);
