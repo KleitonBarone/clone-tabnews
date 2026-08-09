@@ -1,8 +1,20 @@
 import { Header, PageLayout, Text } from "@primer/react";
+import Head from "next/head";
 
-export default function DefaultLayout({ children }) {
+export default function DefaultLayout({ children, metadata = {} }) {
   return (
     <>
+      <Head>
+        <title>
+          {metadata.title
+            ? `${metadata.title} · Clone TabNews`
+            : "Clone TabNews"}
+        </title>
+        {metadata.description && (
+          <meta name="description" content={metadata.description} />
+        )}
+      </Head>
+
       <Header>
         <Header.Item full>
           <Header.Link href="/">Clone TabNews</Header.Link>
@@ -14,6 +26,7 @@ export default function DefaultLayout({ children }) {
           <Header.Link href="/cadastro">Cadastrar</Header.Link>
         </Header.Item>
       </Header>
+
       <PageLayout>
         <PageLayout.Content>{children}</PageLayout.Content>
 

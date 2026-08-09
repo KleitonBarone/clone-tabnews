@@ -1,3 +1,4 @@
+import DefaultLayout from "interface/DefaultLayout";
 import useSWR from "swr";
 
 async function fetchAPI(key) {
@@ -8,11 +9,16 @@ async function fetchAPI(key) {
 
 export default function StatusPage() {
   return (
-    <>
+    <DefaultLayout
+      metadata={{
+        title: "Status",
+        description: "Consulte o status dos serviços do Clone TabNews.",
+      }}
+    >
       <h1>Status Page</h1>
       <UpdatedAt />
       <DatabaseStatus />
-    </>
+    </DefaultLayout>
   );
 }
 
