@@ -1,5 +1,5 @@
+import { Button } from "@primer/react";
 import { useState } from "react";
-
 export default function RegisterPage() {
   console.log("Render do <RegisterPage>");
 
@@ -56,7 +56,7 @@ export default function RegisterPage() {
           />
         </div>
 
-        <button type="submit">Criar cadastro</button>
+        <Button type="submit">Criar cadastro</Button>
       </form>
     </>
   );
